@@ -29,6 +29,7 @@ jobs:
     
     # Get flutter dependencies.
     - run: flutter pub get
+    - run: flutter clean
     
 
     # Statically analyze the Dart code for any errors.
