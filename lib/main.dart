@@ -1,4 +1,3 @@
-// @dart=2.9
 //v1 testtesttest
 import 'package:flutter/material.dart';
 
@@ -11,6 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+debugShowCheckedModeBanner:false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
