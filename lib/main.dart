@@ -130,11 +130,11 @@ poeamLines.add(Text(snapshot.data!.lines[l]));
 }
             children = <Widget>[
 
-Text("Title: $snapshot.data!.title"),
-Text("Author: $snapshot.data!.author"),
+Text("Title: ${snapshot.data!.title}"),
+Text("Author: ${snapshot.data!.author}"),
 ...poeamLines,
 ElevatedButton(
-          child: Text('More by $snapshot.data!.author'),
+          child: Text('More by ${snapshot.data!.author}'),
           onPressed: () {
             Navigator.push(
               context,
