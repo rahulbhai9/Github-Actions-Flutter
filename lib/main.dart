@@ -107,7 +107,7 @@ late final Future<Poeam> futurePoeam;
   @override
   void initState() {
     super.initState();
-    futurePoeam = fetchPoeam(poeamPath:Widget.poeamPath);
+    futurePoeam = fetchPoeam(poeamPath:widget.poeamPath);
   }
 
   @override
