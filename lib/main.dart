@@ -99,12 +99,11 @@ final String poeamPath;
    PoeamPage({required this.poeamPath,}) : super();
 
   @override
-  _ PoeamPageState createState() => _ PoeamPageState();
+  _PoeamPageState createState() => _PoeamPageState();
 }
 
-class _ PoeamPageState extends State<PoeamPage> {
-late final   Future<Poeam> futurePoeam;
-
+class _PoeamPageState extends State<PoeamPage> {
+late final Future<Poeam> futurePoeam;
   @override
   void initState() {
     super.initState();
@@ -125,17 +124,17 @@ late final   Future<Poeam> futurePoeam;
 
     if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
-          List<Widget> poeamLines;
-for(int l=0;l<snapshot.data.lines.length;l++){
-poeamLines.add(Text(snapshot.data.lines[l]));
+          List<Widget> poeamLines = [];
+for(int l=0;l<snapshot.data!.lines.length;l++){
+poeamLines.add(Text(snapshot.data!.lines[l]));
 }
             children = <Widget>[
 
-Text("Title: ${snapshot.data.title}"),
-Text("Author: ${snapshot.data.author}"),
+Text("Title: ${snapshot.data!.title}"),
+Text("Author: ${snapshot.data!.author}"),
 ...poeamLines,
 ElevatedButton(
-          child: Text('More by ${snapshot.data.author}'),
+          child: Text('More by ${snapshot.data!.author}'),
           onPressed: () {
             Navigator.push(
               context,
