@@ -96,14 +96,14 @@ PoeamPage(poeamPath:"random"),
 }
 class PoeamPage extends StatefulWidget {
 final String poeamPath;
-   PoeamPage({required poeamPath,}) : super();
+   PoeamPage({required this.poeamPath}) : super();
 
   @override
   _ PoeamPageState createState() => _ PoeamPageState();
 }
 
 class _ PoeamPageState extends State<PoeamPage> {
-late   Future<Poeam> futurePoeam;
+late final   Future<Poeam> futurePoeam;
 
   @override
   void initState() {
@@ -125,14 +125,17 @@ late   Future<Poeam> futurePoeam;
 
     if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
-          List poeamLines = snapshot.data!.lines.map <List<Widget>>((line) => Text(line)).toList();
+          List<Widget> poeamLines;
+for(int l=0;l<snapshot.data.lines.length;l++){
+poeamLines.add(Text(snapshot.data.lines[l]));
+}
             children = <Widget>[
 
-Text("Title: ${snapshot.data!.title}"),
-Text("Author: ${snapshot.data!.author}"),
-...? poeamLines,
+Text("Title: ${snapshot.data.title}"),
+Text("Author: ${snapshot.data.author}"),
+...poeamLines,
 ElevatedButton(
-          child: const Text('More by ${snapshot.data.!author}'),
+          child: const Text('More by ${snapshot.data.author}'),
           onPressed: () {
             Navigator.push(
               context,
