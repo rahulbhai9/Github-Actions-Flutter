@@ -61,10 +61,10 @@ debugShowCheckedModeBanner:false,
 }
 
 class MyHomePage extends StatelessWidget {
+  final String title;
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
 
-  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,7 @@ PoeamPage(poeamPath:"random"),
 }
 class PoeamPage extends StatefulWidget {
 final String poeamPath;
-   PoeamPage({required this.poeamPath}) : super();
+   PoeamPage({required this.poeamPath,}) : super();
 
   @override
   _ PoeamPageState createState() => _ PoeamPageState();
@@ -135,11 +135,11 @@ Text("Title: ${snapshot.data.title}"),
 Text("Author: ${snapshot.data.author}"),
 ...poeamLines,
 ElevatedButton(
-          child: const Text('More by ${snapshot.data.author}'),
+          child: Text('More by ${snapshot.data.author}'),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const PoeamList()),
+              MaterialPageRoute(builder: (context) => PoeamList()),
             );
           },
         ),
@@ -157,7 +157,7 @@ ElevatedButton(
               )
             ];
               } else {
-            children = const <Widget>[
+            children = <Widget>[
               SizedBox(
                 width: 60,
                 height: 60,
@@ -166,7 +166,7 @@ ElevatedButton(
               Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: Text('Awaiting poeam...'),
-              )
+              ),
             ];
           }
 
@@ -203,7 +203,7 @@ class PoeamList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Poeams by'),
+        title: Text('Poeams by'),
       ),
       body: Center(
         child: Text("List of Poeams"),
@@ -218,7 +218,7 @@ class AuthorList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Author'),
+        title: Text('Author'),
       ),
       body: Center(
         child: Text("List of authors"),
