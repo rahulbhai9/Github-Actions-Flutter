@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 Future<Poeam> fetchPoeam({required String poeamPath}) async {
   final response = await http
-      .get(Uri.parse('https://poetrydb.org/${poeamPath}'));
+      .get(Uri.parse('https://poetrydb.org/$poeamPath'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -130,11 +130,11 @@ poeamLines.add(Text(snapshot.data!.lines[l]));
 }
             children = <Widget>[
 
-Text("Title: ${snapshot.data!.title}"),
-Text("Author: ${snapshot.data!.author}"),
+Text("Title: $snapshot.data!.title"),
+Text("Author: $snapshot.data!.author"),
 ...poeamLines,
 ElevatedButton(
-          child: Text('More by ${snapshot.data!.author}'),
+          child: Text('More by $snapshot.data!.author'),
           onPressed: () {
             Navigator.push(
               context,
@@ -152,7 +152,7 @@ ElevatedButton(
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
+                child: Text('Error: $snapshot.error'),
               )
             ];
               } else {
