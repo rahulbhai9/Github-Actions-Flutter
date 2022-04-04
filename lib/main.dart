@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<Poeam> fetchPoeam({required String poeamPath}) async {
-  final response = await http.get(Uri.parse(Uri.encodeComponent('https://poetrydb.org/$poeamPath')));
+  final response = await http.get(Uri.parse('https://poetrydb.org/$poeamPath'));
 
   if (response.statusCode == 200) {
     return Poeam.fromJson(jsonDecode(response.body)[0]);
@@ -19,13 +19,13 @@ Future<List> fetchAuthors() async {
   final response = await http.get(Uri.parse('https://poetrydb.org/author'));
 
   if (response.statusCode == 200) {
-    return jsonDecode(response.body)!.authors;
+    return jsonDecode(response.body)['authors'];
   } else {
     throw Exception('Failed to load authors');
   }
 }
 Future<List> fetchPoeamsByAuthor({required String authorName}) async {
-  final response = await http.get(Uri.parse(Uri.encodeComponent('https://poetrydb.org/author/$authorName')));
+  final response = await http.get(Uri.parse('https://poetrydb.org/author/${Uri.encodeComponent(authorName)}'));
 
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
@@ -120,7 +120,7 @@ late final Future<Poeam> futurePoeam;
   @override
   void initState() {
     super.initState();
-    futurePoeam = fetchPoeam(poeamPath:widget.poeamPath);
+    futurePoeam = fetchPoeam(poeamPath: widget.poeamPath);
   }
 
   @override
@@ -320,7 +320,7 @@ late final Future<List> futureAllPoeams;
   @override
   void initState() {
     super.initState();
-    futureAllPoeams = fetchPoeamsByAuthor(authorName: widget.authorName); 
+    futureAllPoeams = fetchPoeamsByAuthor(authorName: Uri.encodeComponent(widget.authorName)); 
   }
 
   @override
