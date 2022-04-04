@@ -15,20 +15,26 @@ Future<Poeam> fetchPoeam({required String poeamPath}) async {
   }
 }
 
-Future<List> fetchAuthors() async {
+Future<List<String>> fetchAuthors() async {
   final response = await http.get(Uri.parse('https://poetrydb.org/author'));
 
   if (response.statusCode == 200) {
-    return jsonDecode(response.body)['authors'] as List;
+Map<String, dynamic> data = jsonDecode(response.body);
+return List<String>.from(data['authors']);
   } else {
     throw Exception('Failed to load authors');
   }
 }
-Future<List> fetchPoeamsByAuthor({required String authorName}) async {
+Future<List<Poeam>> fetchPoeamsByAuthor({required String authorName}) async {
   final response = await http.get(Uri.parse('https://poetrydb.org/author/${Uri.encodeComponent(authorName)}'));
 
   if (response.statusCode == 200) {
-    return jsonDecode(response.body) as List;
+list<Poeam> poeams = [];
+    List<Map<String, dynamic>> data = jsonDecode(response.body);
+for(int p=0;p<data.length;p++){
+poeams.add(Poeam.fromJson(data[p]));
+}
+return poeams;
   } else {
     throw Exception('Failed to load poeams');
   }
@@ -197,11 +203,13 @@ ElevatedButton(
               }
 
           return Center(
-            child: Column(
+            child: SingleChildScrollView(
+        child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: children,
             ),
-          );
+          ),
+);
             },
           ),
         ),
@@ -216,7 +224,7 @@ class AllAuthorsPage extends StatefulWidget {
 }
 
 class _AllAuthorsPageState extends State<AllAuthorsPage> {
-late final Future<List> futureAllAuthors;
+late final Future<List<String>> futureAllAuthors;
   @override
   void initState() {
     super.initState();
@@ -230,7 +238,7 @@ late final Future<List> futureAllAuthors;
           title: Text('All authors'),
         ),
         body: Center(
-          child: FutureBuilder<List>(
+          child: FutureBuilder<List<String>>(
             future: futureAllAuthors,
             builder: (context, snapshot) {
           List<Widget> children;
@@ -295,11 +303,13 @@ onTap: () {
               }
 
           return Center(
-            child: Column(
+            child: SingleChildScrollView(
+        child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: children,
             ),
-          );
+          ),
+);
             },
           ),
         ),
@@ -316,7 +326,7 @@ final String authorName;
 }
 
 class _PoeamsByAuthorPageState extends State<PoeamsByAuthorPage> {
-late final Future<List> futureAllPoeams;
+late final Future<List<Poeam>> futureAllPoeams;
   @override
   void initState() {
     super.initState();
@@ -330,7 +340,7 @@ late final Future<List> futureAllPoeams;
           title: Text('Poeams by ${widget.authorName}'),
         ),
         body: Center(
-          child: FutureBuilder<List>(
+          child: FutureBuilder<List<Poeam>>(
             future: futureAllPoeams,
             builder: (context, snapshot) {
           List<Widget> children;
@@ -395,11 +405,13 @@ onTap: () {
               }
 
           return Center(
-            child: Column(
+            child: SingleChildScrollView(
+        child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: children,
             ),
-          );
+          ),
+);
             },
           ),
         ),
