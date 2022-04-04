@@ -19,7 +19,7 @@ Future<List> fetchAuthors() async {
   final response = await http.get(Uri.parse('https://poetrydb.org/author'));
 
   if (response.statusCode == 200) {
-    return jsonDecode(response.body)['authors'];
+    return jsonDecode(response.body)['authors'] as List;
   } else {
     throw Exception('Failed to load authors');
   }
@@ -28,7 +28,7 @@ Future<List> fetchPoeamsByAuthor({required String authorName}) async {
   final response = await http.get(Uri.parse('https://poetrydb.org/author/${Uri.encodeComponent(authorName)}'));
 
   if (response.statusCode == 200) {
-    return jsonDecode(response.body);
+    return jsonDecode(response.body) as List;
   } else {
     throw Exception('Failed to load poeams');
   }
