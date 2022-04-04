@@ -6,20 +6,33 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<Poeam> fetchPoeam({required String poeamPath}) async {
-  final response = await http
-      .get(Uri.parse('https://poetrydb.org/$poeamPath'));
+  final response = await http.get(Uri.parse(Uri.encodeComponent('https://poetrydb.org/$poeamPath')));
 
   if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
     return Poeam.fromJson(jsonDecode(response.body)[0]);
   } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
     throw Exception('Failed to load poeam');
   }
 }
 
+Future<List> fetchAuthors() async {
+  final response = await http.get(Uri.parse('https://poetrydb.org/author'));
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body)['authors'];
+  } else {
+    throw Exception('Failed to load authors');
+  }
+}
+Future<List> fetchPoeamsByAuthor({required String authorName}) async {
+  final response = await http.get(Uri.parse(Uri.encodeComponent('https://poetrydb.org/author/$authorName')));
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to load poeams');
+  }
+}
 class Poeam {
   final String title;
 
@@ -81,7 +94,7 @@ ElevatedButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AuthorList()),
+              MaterialPageRoute(builder: (context) => AllAuthorsPage()),
             );
           },
         ),
@@ -138,7 +151,7 @@ ElevatedButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PoeamList()),
+              MaterialPageRoute(builder: (context) => PoeamsByAuthorPage(authorName:snapshot.data!.author)),
             );
           },
         ),
@@ -152,7 +165,7 @@ ElevatedButton(
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: $snapshot.error'),
+                child: Text('Error: ${snapshot.error}'),
               )
             ];
               } else {
@@ -195,33 +208,201 @@ ElevatedButton(
     );
   }
 }
-class PoeamList extends StatelessWidget {
-  PoeamList({Key? key}) : super(key: key);
+class AllAuthorsPage extends StatefulWidget {
+   AllAuthorsPage() : super();
+
+  @override
+  _AllAuthorsPageState createState() => _AllAuthorsPageState();
+}
+
+class _AllAuthorsPageState extends State<AllAuthorsPage> {
+late final Future<List> futureAllAuthors;
+  @override
+  void initState() {
+    super.initState();
+    futureAllAuthors = fetchAuthors();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Poeams by'),
-      ),
-      body: Center(
-        child: Text("List of Poeams"),
-      ),
+        appBar: AppBar(
+          title: Text('All authors'),
+        ),
+        body: Center(
+          child: FutureBuilder<List>(
+            future: futureAllAuthors,
+            builder: (context, snapshot) {
+          List<Widget> children;
+
+    if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+//add listbulder
+            children = <Widget>[
+ListView.builder(
+  itemCount: snapshot.data.length,
+  itemBuilder: (context, index) {
+    return ListTile(
+      title: Text(snapshot.data[index]),
+onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PoeamsByAuthorPage(authorName: snapshot.data[index])),
+            );
+},
+    );
+  },
+),
+            ];
+              } else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+              } else {
+            children = <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Awaiting authors...'),
+              ),
+            ];
+          }
+
+} else{
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('loading...'),
+              )
+            ];
+              }
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
+            ),
+          );
+            },
+          ),
+        ),
     );
   }
 }
-class AuthorList extends StatelessWidget {
-  AuthorList({Key? key}) : super(key: key);
+class PoeamsByAuthorPage extends StatefulWidget {
+
+final String authorName;
+   PoeamsByAuthorPage({required this.authorName}) : super();
+
+  @override
+  _PoeamsByAuthorPageState createState() => _PoeamsByAuthorPageState();
+}
+
+class _PoeamsByAuthorPageState extends State<PoeamsByAuthorPage> {
+late final Future<List> futureAllPoeams;
+  @override
+  void initState() {
+    super.initState();
+    futureAllPoeams = fetchPoeamsByAuthor(authorName: widget.authorName);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Author'),
-      ),
-      body: Center(
-        child: Text("List of authors"),
-      ),
+        appBar: AppBar(
+          title: Text('Poeams by ${widget.authorName}'),
+        ),
+        body: Center(
+          child: FutureBuilder<List>(
+            future: futureAllPoeamss,
+            builder: (context, snapshot) {
+          List<Widget> children;
+
+    if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+//add listbulder
+            children = <Widget>[
+ListView.builder(
+  itemCount: snapshot.data.length,
+  itemBuilder: (context, index) {
+    return ListTile(
+      title: Text(snapshot.data[index]!.title),
+onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath: "title/${snapshot.data[index]!.title}")),
+            );
+},
+    );
+  },
+),
+            ];
+              } else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+              } else {
+            children = <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Awaiting poeams...'),
+              ),
+            ];
+          }
+
+} else{
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('loading...'),
+              )
+            ];
+              }
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
+            ),
+          );
+            },
+          ),
+        ),
     );
   }
 }
