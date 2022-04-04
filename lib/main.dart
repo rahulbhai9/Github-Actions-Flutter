@@ -1,23 +1,18 @@
 // pm v1test
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 Future<Poeam> fetchPoeam({required String poeamPath}) async {
   final response = await http.get(Uri.parse('https://poetrydb.org/$poeamPath'));
-
   if (response.statusCode == 200) {
     return Poeam.fromJson(jsonDecode(response.body)[0]);
   } else {
     throw Exception('Failed to load poeam');
   }
 }
-
 Future<List<String>> fetchAuthors() async {
   final response = await http.get(Uri.parse('https://poetrydb.org/author'));
-
   if (response.statusCode == 200) {
 Map<String, dynamic> data = jsonDecode(response.body);
 return List<String>.from(data['authors']);
@@ -30,7 +25,7 @@ Future<List<Poeam>> fetchPoeamsByAuthor({required String authorName}) async {
 
   if (response.statusCode == 200) {
 List<Poeam> poeams = [];
-data = jsonDecode(response.body);
+final data = jsonDecode(response.body);
 poeams = data.map<Poeam>((m)=>Poeam.fromJson(Map<String, dynamic>.from(m))).toList();
 
 return poeams;
