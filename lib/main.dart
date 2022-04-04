@@ -248,14 +248,14 @@ late final Future<List<String>> futureAllAuthors;
 //add listbulder
             children = <Widget>[
 ListView.builder(
-  itemCount: snapshot.data.length,
+  itemCount: snapshot.data!.length,
   itemBuilder: (context, index) {
     return ListTile(
-      title: Text(snapshot.data[index]),
+      title: Text(snapshot.data![index]),
 onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PoeamsByAuthorPage(authorName: snapshot.data[index])),
+              MaterialPageRoute(builder: (context) => PoeamsByAuthorPage(authorName: snapshot.data![index])),
             );
 },
     );
@@ -350,14 +350,14 @@ late final Future<List<Poeam>> futureAllPoeams;
 //add listbulder
             children = <Widget>[
 ListView.builder(
-  itemCount: snapshot.data.length,
+  itemCount: snapshot.data!.length,
   itemBuilder: (context, index) {
     return ListTile(
-      title: Text(snapshot.data[index]!.title),
+      title: Text(snapshot.data![index].title),
 onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath: "title/${snapshot.data[index]!.title}")),
+              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath: "title/${snapshot.data![index].title}")),
             );
 },
     );
