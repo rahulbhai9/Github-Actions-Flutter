@@ -19,7 +19,7 @@ Future<List> fetchAuthors() async {
   final response = await http.get(Uri.parse('https://poetrydb.org/author'));
 
   if (response.statusCode == 200) {
-    return jsonDecode(response.body)['authors'];
+    return jsonDecode(response.body)!.authors;
   } else {
     throw Exception('Failed to load authors');
   }
@@ -240,14 +240,14 @@ late final Future<List> futureAllAuthors;
 //add listbulder
             children = <Widget>[
 ListView.builder(
-  itemCount: snapshot.data.length,
+  itemCount: snapshot.data!.length,
   itemBuilder: (context, index) {
     return ListTile(
-      title: Text(snapshot.data[index]),
+      title: Text(snapshot.data![index]),
 onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PoeamsByAuthorPage(authorName: snapshot.data[index])),
+              MaterialPageRoute(builder: (context) => PoeamsByAuthorPage(authorName: snapshot.data![index])),
             );
 },
     );
@@ -320,7 +320,7 @@ late final Future<List> futureAllPoeams;
   @override
   void initState() {
     super.initState();
-    futureAllPoeams = fetchPoeamsByAuthor(authorName: widget.authorName);
+    futureAllPoeams = fetchPoeamsByAuthor(authorName: widget.authorName); 
   }
 
   @override
@@ -331,7 +331,7 @@ late final Future<List> futureAllPoeams;
         ),
         body: Center(
           child: FutureBuilder<List>(
-            future: futureAllPoeamss,
+            future: futureAllPoeams,
             builder: (context, snapshot) {
           List<Widget> children;
 
@@ -340,14 +340,14 @@ late final Future<List> futureAllPoeams;
 //add listbulder
             children = <Widget>[
 ListView.builder(
-  itemCount: snapshot.data.length,
+  itemCount: snapshot.data!.length,
   itemBuilder: (context, index) {
     return ListTile(
-      title: Text(snapshot.data[index]!.title),
+      title: Text(snapshot.data![index]!.title),
 onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath: "title/${snapshot.data[index]!.title}")),
+              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath: "title/${snapshot.data![index]!.title}")),
             );
 },
     );
