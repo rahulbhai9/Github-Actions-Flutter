@@ -29,7 +29,7 @@ Future<List<Poeam>> fetchPoeamsByAuthor({required String authorName}) async {
   final response = await http.get(Uri.parse('https://poetrydb.org/author/${Uri.encodeComponent(authorName)}'));
 
   if (response.statusCode == 200) {
-list<Poeam> poeams = [];
+List<Poeam> poeams = [];
     List<Map<String, dynamic>> data = jsonDecode(response.body);
 for(int p=0;p<data.length;p++){
 poeams.add(Poeam.fromJson(data[p]));
@@ -248,14 +248,14 @@ late final Future<List<String>> futureAllAuthors;
 //add listbulder
             children = <Widget>[
 ListView.builder(
-  itemCount: snapshot.data!.length,
+  itemCount: snapshot.data.length,
   itemBuilder: (context, index) {
     return ListTile(
-      title: Text(snapshot.data![index]),
+      title: Text(snapshot.data[index]),
 onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PoeamsByAuthorPage(authorName: snapshot.data![index])),
+              MaterialPageRoute(builder: (context) => PoeamsByAuthorPage(authorName: snapshot.data[index])),
             );
 },
     );
@@ -350,14 +350,14 @@ late final Future<List<Poeam>> futureAllPoeams;
 //add listbulder
             children = <Widget>[
 ListView.builder(
-  itemCount: snapshot.data!.length,
+  itemCount: snapshot.data.length,
   itemBuilder: (context, index) {
     return ListTile(
-      title: Text(snapshot.data![index]!.title),
+      title: Text(snapshot.data[index]!.title),
 onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath: "title/${snapshot.data![index]!.title}")),
+              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath: "title/${snapshot.data[index]!.title}")),
             );
 },
     );
