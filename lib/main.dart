@@ -30,10 +30,9 @@ Future<List<Poeam>> fetchPoeamsByAuthor({required String authorName}) async {
 
   if (response.statusCode == 200) {
 List<Poeam> poeams = [];
-    List<Map<String, dynamic>> data = jsonDecode(response.body);
-for(int p=0;p<data.length;p++){
-poeams.add(Poeam.fromJson(data[p]));
-}
+data = jsonDecode(response.body);
+poeams = data.map<Poeam>((m)=>Poeam.fromJson(Map<String, dynamic>.from(m))).toList();
+
 return poeams;
   } else {
     throw Exception('Failed to load poeams');
