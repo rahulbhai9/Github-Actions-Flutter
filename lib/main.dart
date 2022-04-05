@@ -196,7 +196,7 @@ ElevatedButton(
             ];
               }
 
-          return Center(
+          return Expanded(
             child: SingleChildScrollView(
         child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -296,7 +296,7 @@ onTap: () {
             ];
               }
 
-          return Center(
+          return Expanded(
             child: SingleChildScrollView(
         child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -398,7 +398,7 @@ onTap: () {
             ];
               }
 
-          return Center(
+          return Expanded(
             child: SingleChildScrollView(
         child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
