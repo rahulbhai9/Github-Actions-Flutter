@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 Future<Poeam> fetchPoeam({required String poeamPath}) async {
-  final response = await http.get(Uri.parse('https://poetrydb.org/$poeamPath'));
+  final response = await http.get(Uri.parse(Uri.encodeFull('https://poetrydb.org/$poeamPath')));
   if (response.statusCode == 200) {
     return Poeam.fromJson(jsonDecode(response.body)[0]);
   } else {
@@ -21,7 +21,7 @@ return List<String>.from(data['authors']);
   }
 }
 Future<List<Poeam>> fetchPoeamsByAuthor({required String authorName}) async {
-  final response = await http.get(Uri.parse('https://poetrydb.org/author/${Uri.encodeComponent(authorName)}'));
+  final response = await http.get(Uri.parse(Uri.encodeFull('https://poetrydb.org/author/$authorName')));
 
   if (response.statusCode == 200) {
 List<Poeam> poeams = [];
@@ -324,7 +324,7 @@ late final Future<List<Poeam>> futureAllPoeams;
   @override
   void initState() {
     super.initState();
-    futureAllPoeams = fetchPoeamsByAuthor(authorName: Uri.encodeComponent(widget.authorName)); 
+    futureAllPoeams = fetchPoeamsByAuthor(authorName: widget.authorName); 
   }
 
   @override
