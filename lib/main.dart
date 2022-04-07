@@ -98,7 +98,15 @@ ElevatedButton(
             );
           },
         ),
-PoeamPage(poeamPath:"random"),
+ElevatedButton(
+          child: Text('Random poeam'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath:"random")),
+            );
+          },
+        ),
 
           ],
         ),
@@ -125,11 +133,13 @@ late final Future<Poeam> futurePoeam;
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
           title: Text('Poeam'),
         ),
-        body: Center(
+        body: Container(
+        height: height,
           child: FutureBuilder<Poeam>(
             future: futurePoeam,
             builder: (context, snapshot) {
@@ -227,11 +237,13 @@ late final Future<List<String>> futureAllAuthors;
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
-          title: Text('All authors'),
+          title: Text('Authors'),
         ),
-        body: Center(
+        body: Container(
+        height: height,
           child: FutureBuilder<List<String>>(
             future: futureAllAuthors,
             builder: (context, snapshot) {
@@ -329,11 +341,13 @@ late final Future<List<Poeam>> futureAllPoeams;
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Poeams by ${widget.authorName}'),
+          title: Text('Poeams'),
         ),
-        body: Center(
+        body: Container(
+        height: height,
           child: FutureBuilder<List<Poeam>>(
             future: futureAllPoeams,
             builder: (context, snapshot) {
