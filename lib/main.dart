@@ -86,8 +86,7 @@ class MyHomePage extends StatelessWidget {
         title: Text(title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
           children: <Widget>[
 ElevatedButton(
           child: Text('Browse all authors'),
@@ -208,8 +207,7 @@ ElevatedButton(
 
           return Expanded(
             child: SingleChildScrollView(
-        child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
               children: children,
             ),
           ),
@@ -310,8 +308,7 @@ onTap: () {
 
           return Expanded(
             child: SingleChildScrollView(
-        child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
               children: children,
             ),
           ),
@@ -414,8 +411,7 @@ onTap: () {
 
           return Expanded(
             child: SingleChildScrollView(
-        child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
               children: children,
             ),
           ),
