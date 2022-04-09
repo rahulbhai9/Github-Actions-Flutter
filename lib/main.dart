@@ -205,12 +205,8 @@ ElevatedButton(
             ];
               }
 
-          return Expanded(
-            child: SingleChildScrollView(
-        child: Wrap(
+          return ListView(
               children: children,
-            ),
-          ),
 );
             },
           ),
@@ -250,8 +246,7 @@ late final Future<List<String>> futureAllAuthors;
     if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
 //add listbulder
-            children = <Widget>[
-ListView.builder(
+return ListView.builder(
   itemCount: snapshot.data!.length,
   itemBuilder: (context, index) {
     return ListTile(
@@ -264,8 +259,7 @@ onTap: () {
 },
     );
   },
-),
-            ];
+);
               } else if (snapshot.hasError) {
             children = <Widget>[
               const Icon(
@@ -306,12 +300,8 @@ onTap: () {
             ];
               }
 
-          return Expanded(
-            child: SingleChildScrollView(
-        child: Wrap(
+          return ListView(
               children: children,
-            ),
-          ),
 );
             },
           ),
@@ -353,8 +343,7 @@ late final Future<List<Poeam>> futureAllPoeams;
     if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
 //add listbulder
-            children = <Widget>[
-ListView.builder(
+return ListView.builder(
   itemCount: snapshot.data!.length,
   itemBuilder: (context, index) {
     return ListTile(
@@ -367,8 +356,7 @@ onTap: () {
 },
     );
   },
-),
-            ];
+            );
               } else if (snapshot.hasError) {
             children = <Widget>[
               const Icon(
@@ -409,12 +397,8 @@ onTap: () {
             ];
               }
 
-          return Expanded(
-            child: SingleChildScrollView(
-        child: Wrap(
+          return ListView(
               children: children,
-            ),
-          ),
 );
             },
           ),
