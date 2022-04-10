@@ -33,6 +33,19 @@ return poeams;
     throw Exception('Failed to load poeams');
   }
 }
+Future<List<Poeam>> searchPoeams({required String searchQuery}) async {
+  final response = await http.get(Uri.parse(Uri.encodeFull('https://poetrydb.org/title/$searchQuery')));
+
+  if (response.statusCode == 200) {
+List<Poeam> poeams = [];
+final data = jsonDecode(response.body);
+poeams = data.map<Poeam>((m)=>Poeam.fromJson(Map<String, dynamic>.from(m))).toList();
+
+return poeams;
+  } else {
+    throw Exception('Poeams not found with $searchQuery');
+  }
+}
 class Poeam {
   final String title;
 
@@ -82,7 +95,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: MyAppBar(
         title: Text(title),
       ),
       body: Center(
@@ -114,6 +127,80 @@ ElevatedButton(
     );
   }
 }
+class MyAppBar extends StatelessWidget {
+  final String title;
+  MyAppBar({Key? key, required this.title}) : super(key: key);
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+        title: Text(title),
+actions: <Widget>[
+ElevatedButton.icon(
+  onPressed: () {
+        showSearch(
+          context: context,
+          delegate: CustomSearchDelegate(),
+        );
+},
+  icon: Icon(Icons.search,),
+label: Text('Search'),
+),
+],
+      );
+  }
+}
+class CustomSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+ElevatedButton.icon(
+  onPressed: () {
+query = '';
+},
+  icon: Icon(Icons.clear,),
+label: Text('Clear query'),
+),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return ElevatedButton.icon(
+  onPressed: () {
+        close(context, null);
+},
+  icon: Icon(Icons.arrow_back,),
+label: Text('Navigate up'),
+);
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    if (query.length < 3) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Text(
+              "Search term must be longer than two letters.",
+            ),
+          )
+        ],
+      );
+    }
+return SearchedPoeams(searchQuery:query);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // This method is called everytime the search term changes. 
+    // If you want to add search suggestions as the user enters their search term, this is the place to do that.
+    return Column();
+  }
+}
 class PoeamPage extends StatefulWidget {
 final String poeamPath;
    PoeamPage({required this.poeamPath,}) : super();
@@ -134,7 +221,7 @@ late final Future<Poeam> futurePoeam;
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
+        appBar: MyAppBar(
           title: Text('Poeam'),
         ),
         body: Container(
@@ -233,7 +320,7 @@ late final Future<List<String>> futureAllAuthors;
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
+        appBar: MyAppBar(
           title: Text('Authors'),
         ),
         body: Container(
@@ -330,7 +417,7 @@ late final Future<List<Poeam>> futureAllPoeams;
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
+        appBar: MyAppBar(
           title: Text('Poeams'),
         ),
         body: Container(
@@ -403,6 +490,98 @@ onTap: () {
             },
           ),
         ),
+    );
+  }
+}
+class SearchedPoeams extends StatefulWidget {
+
+final String searchQuery;
+   SearchedPoeams({required this.searchQuery}) : super();
+
+  @override
+  _SearchedPoeamsState createState() => _SearchedPoeamsState();
+}
+
+class _SearchedPoeamsState extends State<SearchedPoeams> {
+late final Future<List<Poeam>> futureAllPoeams;
+  @override
+  void initState() {
+    super.initState();
+    futureAllPoeams = searchPoeams(searchQuery: widget.searchQuery); 
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+return Container(
+        height: height,
+          child: FutureBuilder<List<Poeam>>(
+            future: futureAllPoeams,
+            builder: (context, snapshot) {
+          List<Widget> children;
+
+    if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+//add listbulder
+return ListView.builder(
+  itemCount: snapshot.data!.length,
+  itemBuilder: (context, index) {
+    return ListTile(
+      title: Text(snapshot.data![index].title),
+onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PoeamPage(poeamPath: "title/${snapshot.data![index].title}")),
+            );
+},
+    );
+  },
+            );
+              } else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+              } else {
+            children = <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Awaiting poeams...'),
+              ),
+            ];
+          }
+
+} else{
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('loading...'),
+              )
+            ];
+              }
+
+          return ListView(
+              children: children,
+);
+            },
+          ),
     );
   }
 }
