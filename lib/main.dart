@@ -96,7 +96,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: Text(title),
+        title: title,
       ),
       body: Center(
         child: Wrap(
@@ -224,7 +224,7 @@ late final Future<Poeam> futurePoeam;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: MyAppBar(
-          title: Text('Poeam'),
+          title: 'Poeam',
         ),
         body: Container(
         height: height,
@@ -323,7 +323,7 @@ late final Future<List<String>> futureAllAuthors;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: MyAppBar(
-          title: Text('Authors'),
+          title: 'Authors',
         ),
         body: Container(
         height: height,
@@ -420,7 +420,7 @@ late final Future<List<Poeam>> futureAllPoeams;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: MyAppBar(
-          title: Text('Poeams'),
+          title: 'Poeams',
         ),
         body: Container(
         height: height,
