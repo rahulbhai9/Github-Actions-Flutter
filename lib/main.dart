@@ -127,7 +127,7 @@ ElevatedButton(
     );
   }
 }
-class MyAppBar extends StatelessWidget {
+class MyAppBar extends StatelessWidget with PreferredSizeWidget{
   final String title;
   MyAppBar({Key? key, required this.title}) : super(key: key);
 
@@ -151,6 +151,8 @@ label: Text('Search'),
 ],
       );
   }
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 class CustomSearchDelegate extends SearchDelegate {
   @override
