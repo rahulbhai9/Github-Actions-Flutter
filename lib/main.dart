@@ -142,12 +142,7 @@ ElevatedButton(
 }
 class LiveText extends StatelessWidget{
   final String text;
-  LiveText(String t) {
-text=t;
-}
-
-
-
+  LiveText(this.text);
   @override
   Widget build(BuildContext context) {
 return Semantics(child:Text(text), liveRegion: true,);
