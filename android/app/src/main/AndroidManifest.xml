@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.github_actions_flutter">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
      /home/runner/work/Github-Actions-Flutter/Github-Actions-Flutter/android/app/src/main/AndroidManifest.xml:12:9-40:20: AAPT: error: attribute 'android:name' in <activity> tag must be a valid Java class name.
@@ -8,7 +9,10 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
 <uses-permission android:name="android.permission.INTERNET" />
+<uses-sdk tools:overrideLibrary="io.flutter.plugins.firebase.messaging"/>
+<!--
 <uses-sdk android:minSdkVersion="19" />
+-->
     <application
 
         android:label="github_actions_flutter"
