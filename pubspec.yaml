@@ -26,6 +26,13 @@ dependencies:
   cupertino_icons: ^0.1.3
   http: ^0.13.4
 
+  connectivity_plus: ^2.3.0
+  google_mobile_ads: ^1.2.0
+  firebase_core: ^1.14.1
+  firebase_messeging: ^11.2.13
+  awesome_notifications: ^0.6.21
+  shared_preferences: ^2.0.13
+  device_info_plus: ^3.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
