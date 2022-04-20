@@ -110,12 +110,6 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Poems!",
-                ),
-                Padding( padding: const EdgeInsets.only(bottom: 72), ),
-                if (snapshot.hasData)
-//show daily poem by opening new page.
 ElevatedButton(
           child: Text('Browse all authors'),
           onPressed: () {
@@ -134,18 +128,6 @@ ElevatedButton(
             );
           },
         ),
-                else if (snapshot.hasError)
-                  Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 60,
-                  )
-                else
-                  SizedBox(
-                    child: CircularProgressIndicator(),
-                    width: 48,
-                    height: 48,
-                  ),
               ],
             ),
           );
@@ -160,8 +142,8 @@ ElevatedButton(
 }
 class LiveText extends StatelessWidget{
   final String text;
-  LiveText(String text) {
-this.text=text;
+  LiveText(String t) {
+text=t;
 }
 
 
