@@ -1,6 +1,8 @@
-// pm v1test
+// pm v3
 import 'dart:async';
 import 'dart:convert';
+import 'ad_helper.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 Future<Poeam> fetchPoeam({required String poeamPath}) async {
@@ -81,26 +83,39 @@ debugShowCheckedModeBanner:false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Pohub'),
+      home: MyHomePage(title: 'Poems'),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   final String title;
   MyHomePage({Key? key, required this.title}) : super(key: key);
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
 
-
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: title,
+        title: widget.title,
       ),
-      body: Center(
-        child: Wrap(
-          children: <Widget>[
+      body: FutureBuilder<void>(
+        future: _initGoogleMobileAds(),
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Poems!",
+                ),
+                Padding( padding: const EdgeInsets.only(bottom: 72), ),
+                if (snapshot.hasData)
+//show daily poem by opening new page.
 ElevatedButton(
           child: Text('Browse all authors'),
           onPressed: () {
@@ -119,12 +134,41 @@ ElevatedButton(
             );
           },
         ),
-
-          ],
-        ),
+                else if (snapshot.hasError)
+                  Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  )
+                else
+                  SizedBox(
+                    child: CircularProgressIndicator(),
+                    width: 48,
+                    height: 48,
+                  ),
+              ],
+            ),
+          );
+        },
       ),
-
     );
+  }
+
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    return MobileAds.instance.initialize();
+  }
+}
+class LiveText extends StatelessWidget{
+  final String text;
+  LiveText(String text) {
+this.text=text;
+}
+
+
+
+  @override
+  Widget build(BuildContext context) {
+return Semantics(child:Text(text), liveRegion: true,);
   }
 }
 class MyAppBar extends StatelessWidget with PreferredSizeWidget{
@@ -186,7 +230,7 @@ label: Text('Navigate up'),
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Center(
-            child: Text(
+            child: LiveText(
               "Search term must be longer than two letters.",
             ),
           )
@@ -212,10 +256,32 @@ final String poeamPath;
 }
 
 class _PoeamPageState extends State<PoeamPage> {
+  late BannerAd _bannerAd;
+
+  bool _isBannerAdReady = false;
 late final Future<Poeam> futurePoeam;
   @override
   void initState() {
     super.initState();
+    _bannerAd = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          _isBannerAdReady = false;
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd.load();
     futurePoeam = fetchPoeam(poeamPath: widget.poeamPath);
   }
 
@@ -241,8 +307,17 @@ poeamLines.add(Text(snapshot.data!.lines[l]));
 }
             children = <Widget>[
 
-Text("Title: ${snapshot.data!.title}"),
+LiveText("Title: ${snapshot.data!.title}"),
 Text("Author: ${snapshot.data!.author}"),
+            if (_isBannerAdReady)
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: _bannerAd.size.width.toDouble(),
+                  height: _bannerAd.size.height.toDouble(),
+                  child: AdWidget(ad: _bannerAd),
+                ),
+              ),
 ...poeamLines,
 ElevatedButton(
           child: Text('More by ${snapshot.data!.author}'),
@@ -263,7 +338,7 @@ ElevatedButton(
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
+                child: LiveText('Error: ${snapshot.error}'),
               )
             ];
               } else {
@@ -275,7 +350,7 @@ ElevatedButton(
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting poeam...'),
+                child: LiveText('Awaiting poeam...'),
               ),
             ];
           }
@@ -289,7 +364,7 @@ ElevatedButton(
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('waiting'),
+                child: LiveText('waiting'),
               )
             ];
               }
@@ -358,7 +433,7 @@ onTap: () {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
+                child: LiveText('Error: ${snapshot.error}'),
               )
             ];
               } else {
@@ -370,7 +445,7 @@ onTap: () {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting authors...'),
+                child: LiveText('Awaiting authors...'),
               ),
             ];
           }
@@ -384,7 +459,7 @@ onTap: () {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('loading...'),
+                child: LiveText('loading...'),
               )
             ];
               }
@@ -455,7 +530,7 @@ onTap: () {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
+                child: LiveText('Error: ${snapshot.error}'),
               )
             ];
               } else {
@@ -467,7 +542,7 @@ onTap: () {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting poeams...'),
+                child: LiveText('Awaiting poeams...'),
               ),
             ];
           }
@@ -481,7 +556,7 @@ onTap: () {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('loading...'),
+                child: LiveText('loading...'),
               )
             ];
               }
@@ -548,7 +623,7 @@ onTap: () {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
+                child: LiveText('not found.'),
               )
             ];
               } else {
@@ -560,7 +635,7 @@ onTap: () {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting poeams...'),
+                child: LiveText('Awaiting poeams...'),
               ),
             ];
           }
@@ -574,7 +649,7 @@ onTap: () {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('loading...'),
+                child: LiveText('loading...'),
               )
             ];
               }
