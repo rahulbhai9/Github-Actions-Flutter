@@ -105,6 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: FutureBuilder<void>(
         future: _initGoogleMobileAds(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+    if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -131,6 +133,16 @@ ElevatedButton(
               ],
             ),
           );
+              } else if (snapshot.hasError) {
+                return LiveText('Error: ${snapshot.error}');
+
+} else{
+return LiveText("Please wait.");
+}
+
+} else{
+return LiveText("Welcome!");
+}
         },
       ),
     );
