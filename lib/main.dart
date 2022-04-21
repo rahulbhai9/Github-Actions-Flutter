@@ -269,7 +269,7 @@ late final Future<Poeam> futurePoeam;
           _isBannerAdReady = false;
           ad.dispose();
           setState(() {
-isError = true;
+_isError = true;
 error = 'Failed: ${err.message}';
 });
         },
@@ -304,8 +304,8 @@ poeamLines.add(Text(snapshot.data!.lines[l]));
 
 LiveText("Title: ${snapshot.data!.title}"),
 Text("Author: ${snapshot.data!.author}"),
-if(isError)
-LiveText(error);
+if(_isError)
+LiveText(error),
             if (_isBannerAdReady)
               Align(
                 alignment: Alignment.topCenter,
