@@ -247,6 +247,8 @@ final String poeamPath;
 class _PoeamPageState extends State<PoeamPage> {
   late BannerAd _bannerAd;
 
+  bool _isError = false;
+String error = "";
   bool _isBannerAdReady = false;
 late final Future<Poeam> futurePoeam;
   @override
@@ -263,9 +265,13 @@ late final Future<Poeam> futurePoeam;
           });
         },
         onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
+//          print('Failed to load a banner ad: ${err.message}');
           _isBannerAdReady = false;
           ad.dispose();
+          setState(() {
+isError = true;
+error = 'Failed: ${err.message}';
+});
         },
       ),
     );
@@ -298,6 +304,8 @@ poeamLines.add(Text(snapshot.data!.lines[l]));
 
 LiveText("Title: ${snapshot.data!.title}"),
 Text("Author: ${snapshot.data!.author}"),
+if(isError)
+LiveText(error);
             if (_isBannerAdReady)
               Align(
                 alignment: Alignment.topCenter,
